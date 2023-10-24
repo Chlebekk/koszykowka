@@ -1,6 +1,7 @@
 package com.example.koszykowka;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -19,12 +20,19 @@ public class MainActivity extends AppCompatActivity {
         View view=binding.getRoot();
         setContentView(view);
         punktyViewModel= new ViewModelProvider(this).get(PunktyViewModel.class);
-        binding.textView.setText(String.valueOf(punktyViewModel.getPkt()));
+        punktyViewModel.getPkt().observe(this,
+                new Observer<Integer>() {
+                    @Override
+                    public void onChanged(Integer integer) {
+                        binding.textView.setText(String.valueOf(integer));
+                    }
+                });
+
         binding.button.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        zmienpunkty(1);
+                        punktyViewModel.dodajPkt(1);
                     }
                 }
         );
@@ -32,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        zmienpunkty(2);
+                        punktyViewModel.dodajPkt(2);
                     }
                 }
         );
@@ -40,13 +48,9 @@ public class MainActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        zmienpunkty(3);
+                        punktyViewModel.dodajPkt(3);
                     }
                 }
         );
-    }
-    private void zmienpunkty(int i){
-        punktyViewModel.dodajPkt(i);
-        binding.textView.setText(String.valueOf(punktyViewModel.getPkt()));
     }
 }
